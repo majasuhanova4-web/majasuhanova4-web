@@ -11,6 +11,7 @@ const stack = [
   { top: 206, size: 107, blur: 1, opacity: 1, shift: 0 },
   { top: 186.5, size: 87, blur: 2, opacity: 0.9, shift: 0 },
   { top: 169, size: 75, blur: 3, opacity: 0.9, shift: 0 },
+  { top: 155, size: 65, blur: 4, opacity: 0.75, shift: 0 },
 ];
 const outgoing = { top: 445, size: 175, blur: 3, opacity: 0, shift: -115 };
 
