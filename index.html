@@ -1,4 +1,148 @@
-! docype html>
-<html>
-  hello maya
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Портфолио UX/UI-дизайнера. Избранные проекты.">
+  <meta name="theme-color" content="#eeeeee">
+  <link rel="icon" href="data:,">
+  <title>Портфолио UX/UI-дизайнера</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./about.css">
+  <link rel="stylesheet" href="./contacts.css">
+  <script src="./scroll.js" defer></script>
+  <script src="./header-menu.js" defer></script>
+  <script src="./about.js" defer></script>
+  <script src="./about-skills.js" defer></script>
+  <script src="./backdrop-reveal.js" defer></script>
+</head>
+<body>
+  <nav class="nav" aria-label="Разделы портфолио">
+    <span class="nav-highlight" aria-hidden="true"></span>
+    <a class="nav-item" href="#portfolio" aria-current="location" data-selected title="Портфолио">
+      <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="7" width="18" height="13" rx="2"/>
+        <path d="M8 7V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M3 12a21 21 0 0 0 18 0"/>
+      </svg>
+      <span class="nav-label"><span class="nav-label-text">Портфолио</span></span>
+    </a>
+    <a class="nav-item" href="#about" title="Обо мне">
+      <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="8" r="3.5"/>
+        <path d="M5 20v-1a7 5 0 0 1 14 0v1"/>
+      </svg>
+      <span class="nav-label"><span class="nav-label-text">Обо мне</span></span>
+    </a>
+    <a class="nav-item" href="#contacts" title="Контакты">
+      <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="14" rx="2"/>
+        <path d="m4 7 8 6 8-6"/>
+      </svg>
+      <span class="nav-label"><span class="nav-label-text">Контакты</span></span>
+    </a>
+  </nav>
+  <main>
+    <section id="portfolio" class="hero" aria-label="Портфолио">
+      <div class="viewport">
+        <div class="scene">
+          <div class="backdrop" aria-hidden="true">
+            <img class="backdrop-ux" src="./assets/ux-ui.svg" alt="" data-backdrop-reveal>
+            <img class="backdrop-design" src="./assets/design.svg" alt="" data-backdrop-reveal="from-right">
+          </div>
+
+          <h1 class="headline">
+            <img src="./assets/portfolio.svg" alt="Portfolio">
+          </h1>
+
+          <div class="covers" aria-hidden="true">
+            <img class="cover" src="./assets/price-index.webp" data-title="Лендинг и онлайн сметы на строительство" alt="">
+            <img class="cover" src="./assets/land-search.webp" data-title="Лендинг и сервис по подбору участка" alt="">
+            <img class="cover" src="./assets/design-system.webp" data-title="Дизайн система" alt="">
+            <img class="cover is-active" src="./assets/good-wood.webp" data-title="Telegram mini app" data-project-url="./telegram-mini-app.html" alt="">
+          </div>
+
+          <div class="project">
+            <p id="project-title" class="project-title">Telegram mini app</p>
+            <a class="project-link pill-link" href="./telegram-mini-app.html" role="link" aria-describedby="project-title">
+              <span>Смотреть проект</span>
+              <img src="./assets/arrow.svg" alt="" width="16" height="16">
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="about" aria-labelledby="about-title">
+      <div class="about-intro">
+        <div class="about-scene">
+          <img class="about-backdrop" src="./assets/about-backdrop.svg" alt="" width="1044" height="223" data-backdrop-reveal="from-right">
+          <h2 id="about-title" class="about-title">
+            <img src="./assets/about-title.svg" alt="Обо мне" width="533" height="111">
+          </h2>
+          <img class="about-portrait" src="./assets/maya-portrait.webp" alt="Майя" width="600" height="762">
+        </div>
+      </div>
+
+      <div class="about-details">
+        <article class="about-card" aria-labelledby="about-greeting">
+          <h3 id="about-greeting">Привет,<br>я Майя, продуктовый дизайнер.</h3>
+          <div class="about-copy">
+            <p>Проектирую личные кабинеты и веб-сервисы, в которых много данных, правил и шагов. Помогаю выстроить интерфейс так, чтобы человек понимал, где он сейчас и что делать дальше.</p>
+            <p>Я в дизайне 12 лет, больше четырёх из них — в UX/UI. Начинала с графического дизайна и визуальных коммуникаций. Этот опыт помогает мне вести задачу целиком — от логики пользовательского сценария до визуального языка продукта.</p>
+            <p>Самостоятельно веду дизайн-задачи от разбора бизнес-требований до передачи готовых интерфейсов в разработку. Создавала дизайн-систему с нуля.</p>
+          </div>
+
+          <div class="skills">
+            <section class="skill-group" aria-labelledby="hard-skills">
+              <h4 id="hard-skills">Хард-скиллы</h4>
+              <div class="skill-well">
+                <ul class="skill-tray" aria-labelledby="hard-skills">
+                  <li><span>Figma</span></li>
+                  <li><span>Adobe Photoshop</span></li>
+                  <li><span>Adobe Illustrator</span></li>
+                  <li><span>CorelDRAW</span></li>
+                  <li><span>Claude Code</span></li>
+                  <li><span>Codex</span></li>
+                </ul>
+              </div>
+            </section>
+            <section class="skill-group" aria-labelledby="soft-skills">
+              <h4 id="soft-skills">Софт-скиллы</h4>
+              <div class="skill-well">
+                <ul class="skill-tray" aria-labelledby="soft-skills">
+                  <li><span>Самостоятельность</span></li>
+                  <li><span>Системное мышление</span></li>
+                  <li><span>Умение прояснять требования</span></li>
+                  <li><span>Аргументация дизайн-решений</span></li>
+                  <li><span>Коммуникация с командой</span></li>
+                </ul>
+              </div>
+            </section>
+          </div>
+        </article>
+
+        <a class="about-resume" href="https://hh.ru/resume/0a3f9a51ff0d8aca550039ed1f546530315a4f">
+          <span>Резюме</span>
+          <img src="./assets/arrow.svg" alt="" width="13" height="13">
+        </a>
+      </div>
+    </section>
+
+    <section id="contacts" class="contacts" aria-labelledby="contacts-title">
+      <span class="contacts-divider" aria-hidden="true" data-backdrop-reveal></span>
+      <div class="contacts-content">
+        <h2 id="contacts-title" class="contacts-title">
+          <img src="./assets/contact-title.svg" alt="Контакты" width="1144" height="223" data-backdrop-reveal>
+        </h2>
+        <div class="contacts-qr">
+          <img src="./assets/contact-telegram.png" alt="QR-код для связи в Telegram" width="350" height="350">
+        </div>
+        <a class="pill-link contact-link" href="https://t.me/m_pappaya">
+          <span>Телеграм: @m_pappaya</span>
+          <img src="./assets/arrow.svg" alt="" width="16" height="16">
+        </a>
+      </div>
+    </section>
+  </main>
+</body>
 </html>

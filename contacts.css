@@ -1,0 +1,90 @@
+.contacts {
+  --contacts-top: clamp(150px, 26.2svh, 225px);
+  --qr-size: 224px;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  min-block-size: 100svh;
+  padding: var(--contacts-top) 16px 68px;
+  background: #EEEEEE;
+}
+
+.contacts-divider {
+  position: absolute;
+  inset-block-start: clamp(98px, 11svh, 110px);
+  inset-inline: 24px;
+  max-inline-size: 976px;
+  margin-inline: auto;
+  border-block-start: 1px solid #00000040;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .has-backdrop-motion .contacts-divider[data-backdrop-reveal].is-revealed {
+    animation-name: contacts-divider-enter;
+  }
+}
+
+@keyframes contacts-divider-enter {
+  from { opacity: 0; scale: 0 1; }
+  to { opacity: 1; scale: 1; }
+}
+
+.contacts-content {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: clamp(30px, 4vw, 46px);
+  padding-block-start: min(114px, 14.8vw);
+}
+
+.contacts-title {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  inline-size: min(100%, 1144px);
+  margin: 0 auto;
+  pointer-events: none;
+}
+
+.contacts-title img {
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.contacts-qr {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: var(--qr-size);
+  aspect-ratio: 1;
+  border-radius: 22px;
+}
+
+.contacts-qr::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: url("./assets/contact-telegram.png") center / cover;
+  opacity: .2;
+  content: "";
+}
+
+.contacts-qr img {
+  position: relative;
+  inline-size: 83.64%;
+  block-size: auto;
+  border-radius: 12px;
+  image-rendering: pixelated;
+}
+
+.contact-link:focus-visible,
+.contact-link:active {
+  background: #fff;
+}
+
+@media (max-width: 600px) {
+  .contacts {
+    --contacts-top: clamp(144px, 24svh, 186px);
+    --qr-size: clamp(184px, 54vw, 224px);
+  }
+}
