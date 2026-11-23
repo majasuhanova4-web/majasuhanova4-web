@@ -1,0 +1,101 @@
+name: Build and publish Maya portfolio
+on:
+  push:
+    paths:
+      - ".github/workflows/publish-portfolio.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Copy original assets and build updated portfolio
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone https://github.com/Mayya8888/plagin_url.git /tmp/maya-public-source
+          git -C /tmp/maya-public-source checkout 9d97d959a648d4d1ff87e272e03bff82348c671e
+          rsync -a --exclude=.git --exclude=.github /tmp/maya-public-source/ ./
+          python3 - <<'PY'
+          from pathlib import Path
+          import html
+          root=Path(".")
+          index=root/"index.html"
+          s=index.read_text(encoding="utf8")
+          old='''            <img class="cover" src="./assets/price-index.webp" data-title="Лендинг и онлайн сметы на строительство" alt="">
+            <img class="cover" src="./assets/land-search.webp" data-title="Лендинг и сервис по подбору участка" alt="">
+            <img class="cover" src="./assets/design-system.webp" data-title="Дизайн система" alt="">'''
+          new='''            <img class="cover" src="./assets/price-index.webp" data-title="Индекс цен" data-project-url="./price-index.html" alt="">
+            <img class="cover" src="./assets/design-system.webp" data-title="Дизайн-система" data-project-url="./design-system.html" alt="">
+            <img class="cover" src="./assets/website-redesign.svg" data-title="Редизайн сайта GWD.RU" data-project-url="./website-redesign.html" alt="">
+            <img class="cover" src="./assets/land-search.webp" data-title="Подбор земельного участка" data-project-url="./land-selection.html" alt="">'''
+          assert old in s, "Source index markup changed; stop instead of damaging project layout"
+          index.write_text(s.replace(old,new),encoding="utf8")
+          css=root/"styles.css"
+          s=css.read_text(encoding="utf8")
+          assert "min-block-size: 308svh;" in s
+          s=s.replace("min-block-size: 308svh;","min-block-size: 370svh;")
+          start=s.index(".cover:nth-child(1) {")
+          end=s.index(".cover.is-active {",start)
+          s=s[:start]+'''.cover:nth-child(1) { --size: 65; --top: 155; --blur: 4px; --opacity: .75; --layer: 1; }
+          .cover:nth-child(2) { --size: 75; --top: 169; --blur: 3px; --opacity: .9; --layer: 2; }
+          .cover:nth-child(3) { --size: 87; --top: 186.5; --blur: 2px; --opacity: .9; --layer: 3; }
+          .cover:nth-child(4) { --size: 107; --top: 206; --blur: 1px; --opacity: 1; --layer: 4; }
+          
+          '''+s[end:]
+          s+='''
+/* Project details and responsive controls */
+          .redesign-preview {display:block;inline-size:min(100%,720px);block-size:auto;border-radius:12px;}
+          .redesign-actions {display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-block:4px 28px;}
+          .redesign-actions .pill-link {justify-content:center;}
+          @media(max-width:440px){.redesign-actions{width:100%;flex-direction:column;align-items:stretch}.redesign-actions .pill-link{inline-size:100%;}}
+          '''
+          css.write_text(s,encoding="utf8")
+          scroll=root/"scroll.js"
+          s=scroll.read_text(encoding="utf8")
+          anchor="  { top: 169, size: 75, blur: 3, opacity: 0.9, shift: 0 },"
+          assert anchor in s
+          scroll.write_text(s.replace(anchor,anchor+"\n  { top: 155, size: 65, blur: 4, opacity: 0.75, shift: 0 },"),encoding="utf8")
+          figma_site="https://www.figma.com/design/UMTQMfLCDbjjLU2CMwf8yF/Portfolio?node-id=166-65169&t=NVHPjtDxDbQPYGdf-0"
+          figma_ds="https://www.figma.com/design/hRiXL8DSKrAsJkS54wPiDt/DESIGN-SYSTEM--Copy-?node-id=1610-21&t=apATE0VGJPRNxL57-0"
+          figma_price="https://www.figma.com/design/UMTQMfLCDbjjLU2CMwf8yF/Portfolio?node-id=106-46068&t=NVHPjtDxDbQPYGdf-0"
+          def action(title,url):
+              return '<a class="pill-link" href="'+html.escape(url,quote=True)+'" target="_blank" rel="noopener noreferrer"><span>'+html.escape(title)+'</span><img src="./assets/arrow.svg" alt="" width="16" height="16"></a>'
+          def detail(fname,title,image,actions):
+              page='''<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#eeeeee"><link rel="icon" href="data:,"><link rel="stylesheet" href="./styles.css"><title>'''+html.escape(title)+''' — Портфолио</title></head><body><main class="case-page redesign-page"><a class="pill-link" href="./index.html#portfolio">← Портфолио</a><section class="case-project" aria-labelledby="case-title"><h1 id="case-title">'''+html.escape(title)+'''</h1><img class="redesign-preview" src="'''+image+'''" alt="Превью проекта '''+html.escape(title)+'''" width="940"><div class="redesign-actions" aria-label="Ссылки на проект">'''+''.join(action(*x) for x in actions)+'''</div></section></main></body></html>'''
+              (root/fname).write_text(page,encoding="utf8")
+          def behance(fname,title,projectid):
+              page='''<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="./styles.css"><title>'''+html.escape(title)+''' — Портфолио</title></head><body><main class="case-page"><a class="pill-link" href="./index.html#portfolio">← Портфолио</a><section class="case-project" aria-labelledby="case-title"><iframe class="case-embed" title="Кейс на Behance" src="https://www.behance.net/embed/project/'''+str(projectid)+'''?ilo0=1" width="404" height="316" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-write" allowfullscreen></iframe><h1 id="case-title">'''+html.escape(title)+'''</h1></section></main></body></html>'''
+              (root/fname).write_text(page,encoding="utf8")
+          behance("land-selection.html","Подбор земельного участка",258865535)
+          detail("website-redesign.html","Редизайн сайта GWD.RU","./assets/website-redesign.svg",[("Макет в Figma",figma_site),("Готовый сайт","https://www.gwd.ru")])
+          detail("design-system.html","Дизайн-система","./assets/design-system.webp",[("Открыть в Figma",figma_ds)])
+          detail("price-index.html","Индекс цен","./assets/price-index.webp",[("Открыть в Figma",figma_price)])
+          # The original site's full-quality files are preserved.
+          # The GWD project screenshot will be replaced with its precise image once available to GitHub.
+          svg='''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 932"><defs><filter id="blur"><feGaussianBlur stdDeviation="13"/></filter><linearGradient id="shade" x2="0.8" y2="1"><stop stop-color="#101712" stop-opacity=".65"/><stop offset="1" stop-color="#19211a" stop-opacity=".85"/></linearGradient></defs><image href="good-wood.webp" width="940" height="932" preserveAspectRatio="xMidYMid slice" filter="url(#blur)"/><rect width="940" height="932" fill="url(#shade)"/><g fill="#fff" font-family="Arial,sans-serif" font-weight="700" font-size="130" text-anchor="middle"><text x="470" y="270">РЕДИЗАЙН</text><text x="470" y="440">САЙТА</text><text x="470" y="610">GWD.RU</text></g><path d="M425 700h100v100m0-100-135 135" fill="none" stroke="#fff" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/></svg>'''
+          (root/"assets/website-redesign.svg").write_text(svg,encoding="utf8")
+          (root/".nojekyll").touch()
+          from bs4 import BeautifulSoup
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Publish updated UX/UI portfolio with five projects"
+          git push origin HEAD:main
+      - name: Upload site for GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Deploy GitHub Pages
+        uses: actions/deploy-pages@v4
